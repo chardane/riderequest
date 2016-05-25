@@ -1,0 +1,52 @@
+<script>
+  (function poll(){
+    var token = "<%= @token %>";
+    var request_id = "<%= @request_id %>";
+    var base_url = "<%= @base_url %>";
+    var request_status_url = base_url + "/requests/" + request_id;
+
+    $.ajax({
+      url: request_status_url,
+      headers: {
+        "Authorization" : "Bearer " + token
+      },
+      success: function(data){
+        $('#status').text(data['status']);
+        if (data['status'] != "processing") {
+          if(data['eta']){
+            $('#eta').text(data['eta'] + " minutes");
+          } else {
+            $('#eta').text("0 minutes");
+          }
+          $('#driver_name').text(data['driver']['name']);
+          $('#driver_phone').text(data['driver']['phone_number']);
+          $('#driver_rating').text(data['driver']['rating']);
+          $('#driver_photo').attr('src', data['driver']['picture_url']);
+        }
+      },
+      dataType: "json",
+      complete: function(){
+        setTimeout(poll,3000)
+      },
+      timeout: 30000
+    });
+  })();
+</script>
+
+Pickup location: <%= @pickup_formatted_location %> <br />
+Dropoff location: <%= @dropoff_formatted_location %> <br />
+<br />
+Status: <br />
+<p id="status"></p>
+ETA: <br />
+<p id="eta"></p>
+Driver: <br />
+<img id="driver_photo" />
+<p id="driver_name"></p>
+<p id="driver_phone"></p>
+<p id="driver_rating"></p>
+
+curl -X "PUT" "https://sandbox-api.uber.com/v1/sandbox/requests/<%= @request_id %>"
+-H "Content-Type: application/json"
+-H "Authorization: Bearer <%= @token %>"
+-d "{\"status\":\"accepted\"}"

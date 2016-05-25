@@ -1,0 +1,12 @@
+Pickup location: <%= @pickup_formatted_location %> <br />
+Dropoff location: <%= @dropoff_formatted_location %> <br />
+<br />
+<%= form_tag("/ride_status", method: "get") do %>
+  <% @time_estimates.each do |product|%>
+      <%= radio_button_tag(:product, product['product_id']) %>
+      <%= label_tag("product_#{product['product_id']}", product['localized_display_name']) %>
+      <%= distance_of_time_in_words product['estimate'] %>
+      <br />
+  <% end %>
+  <%= submit_tag("Get an Uber!") %>
+<% end %>
