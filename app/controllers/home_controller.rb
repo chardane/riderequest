@@ -1,11 +1,11 @@
 class HomeController < ApplicationController
   def index
-    @sign_in_link = UberClient.new.authorize_url
+    @sign_in_link = UberClient.authorize_url
   end
 
   def callback
     # exchange code for access token
-    auth_details = UberClient.new.retrieve_access_token(params[:code], request.base_url)
+    auth_details = UberClient.retrieve_access_token(params[:code], request.base_url)
     # persist the token so we can use it later
     session[:access_token] = auth_details.token
   end
@@ -16,7 +16,7 @@ class HomeController < ApplicationController
     dropoff = find_location(params[:dropoff_location])
 
     # get a list of estimates
-    @time_estimates = UberClient.new.get_estimates_by_pickup_location(
+    @time_estimates = UberClient.get_estimates_by_pickup_location(
       session[:access_token],
       pickup['geometry']['location']
     )
@@ -34,7 +34,7 @@ class HomeController < ApplicationController
 
   def ride_status
     # request a ride
-    response = UberClient.new.request_ride(
+    response = UberClient.request_ride(
       access_token: session[:access_token],
       pickup: session[:pickup_location],
       dropoff: session[:dropoff_location],

@@ -1,9 +1,9 @@
-<%= form_tag("/request_uber", method: "get") do %>
-  <%= label_tag(:pickup_location, "Pickup location:") %>
-  <%= text_field_tag(:pickup_location) %>
-  <br />
-  <%= label_tag(:dropoff_location, "Dropoff location:") %>
-  <%= text_field_tag(:dropoff_location) %>
-
-  <%= submit_tag("Find Ubers") %>
-<% end %>
+<div class="stage">
+  <%= form_tag("/request_uber", method: "get") do %>
+    <%= text_field_tag(:pickup_location, nil, placeholder: "Where are you?") %>
+    <br />
+    <%= text_field_tag(:dropoff_location, nil, placeholder: "Where are you going?") %>
+    <br />
+    <%= submit_tag("Find Ubers", class: "button") %>
+  <% end %>
+</div>

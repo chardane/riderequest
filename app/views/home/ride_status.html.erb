@@ -1,3 +1,30 @@
+<div class="stage">
+  <div class="locations">
+    <span class="location-label">
+      From:
+    </span> <br />
+    <%= @pickup_formatted_location %> <br /><br />
+    <span class="location-label">
+      To:
+    </span> <br />
+    <%= @dropoff_formatted_location %> <br /><br />
+  </div>
+
+  <br />
+  <div class="status">
+    Status:
+    <span id="status"></span>
+    <br />
+    ETA:
+    <span id="eta"></span><br />
+    Driver: <br />
+    <div id="driver_photo" class="driver-image"></div>
+    <p id="driver_name"></p>
+    <p id="driver_phone"></p>
+    <p id="driver_rating"></p>
+  </div>
+</div>
+
 <script>
   (function poll(){
     var token = "<%= @token %>";
@@ -20,8 +47,10 @@
           }
           $('#driver_name').text(data['driver']['name']);
           $('#driver_phone').text(data['driver']['phone_number']);
-          $('#driver_rating').text(data['driver']['rating']);
-          $('#driver_photo').attr('src', data['driver']['picture_url']);
+          $('#driver_rating').text("Rating: " + data['driver']['rating']);
+          $('#driver_photo').css('background-image', 'url(' + data['driver']['picture_url'] + ')');
+        } else {
+
         }
       },
       dataType: "json",
@@ -32,21 +61,3 @@
     });
   })();
 </script>
-
-Pickup location: <%= @pickup_formatted_location %> <br />
-Dropoff location: <%= @dropoff_formatted_location %> <br />
-<br />
-Status: <br />
-<p id="status"></p>
-ETA: <br />
-<p id="eta"></p>
-Driver: <br />
-<img id="driver_photo" />
-<p id="driver_name"></p>
-<p id="driver_phone"></p>
-<p id="driver_rating"></p>
-
-curl -X "PUT" "https://sandbox-api.uber.com/v1/sandbox/requests/<%= @request_id %>"
--H "Content-Type: application/json"
--H "Authorization: Bearer <%= @token %>"
--d "{\"status\":\"accepted\"}"
